@@ -11,7 +11,9 @@ class MultiFileDownloaderHelper {
     bool permission = false;
 
     if (deviceInfo is AndroidDeviceInfo) {
-      if (deviceInfo.version.sdkInt > 32) {
+      if (deviceInfo.version.sdkInt >= 33) {
+        // On Android 13 (API 33) and above, this permission is deprecated and always returns PermissionStatus.denied.
+        // Instead use Permission.photos, Permission.video, Permission.audio or Permission.manageExternalStorage
         permission = await Permission.photos.request().isGranted;
       } else {
         permission = await Permission.storage.request().isGranted;

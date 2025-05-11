@@ -57,7 +57,19 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           if (_fileDownloader?.message == DownloadMessageType.downloading)
-                            IconButton(icon: const Icon(Icons.cancel), onPressed: () {}),
+                            IconButton(
+                              icon: const Icon(Icons.cancel),
+                              onPressed: () {
+                                final bool cancel = _multiFileDownloaderController.cancelDownload(
+                                  widget.url,
+                                );
+                                if (cancel) {
+                                  setState(() {
+                                    _fileDownloader = null;
+                                  });
+                                }
+                              },
+                            ),
                           switch (_fileDownloader!.message) {
                             DownloadMessageType.downloading => Center(
                               child: CircularProgressIndicator(

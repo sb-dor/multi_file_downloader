@@ -18,14 +18,12 @@ class FileDownloader with ChangeNotifier {
 
   Future<void> download({bool openFile = false}) async {
     try {
-      final uri = Uri.parse(url);
-      final filePath = '${directory.path}/${uri.pathSegments.last}';
-      final file = File(filePath);
+      final file = await getFile();
 
       if (await file.exists()) {
         message = DownloadMessageType.success;
         notifyListeners();
-        if (openFile) await _openFile(filePath);
+        if (openFile) await _openFile(file.path);
         return;
       }
 
@@ -40,6 +38,7 @@ class FileDownloader with ChangeNotifier {
 
       _subscription = response.stream.listen(
         (chunk) {
+          print("downloading");
           downloadedBytes = (downloadedBytes ?? 0) + chunk.length;
           sink.add(chunk);
           if (totalBytes != null && totalBytes! > 0) {
@@ -65,7 +64,7 @@ class FileDownloader with ChangeNotifier {
 
       await completer.future;
       if (openFile && message == DownloadMessageType.success) {
-        await _openFile(filePath);
+        await _openFile(file.path);
       }
     } catch (error, stackTrace) {
       lastError = error;
@@ -75,10 +74,18 @@ class FileDownloader with ChangeNotifier {
     }
   }
 
-  void cancel() async {
+  Future<void> cancel() async {
     await _subscription?.cancel();
     message = DownloadMessageType.canceled;
+    final file = await getFile();
+    if (file.existsSync()) file.deleteSync();
     notifyListeners();
+  }
+
+  Future<File> getFile() async {
+    final uri = Uri.parse(url);
+    final filePath = '${directory.path}/${uri.pathSegments.last}';
+    return File(filePath);
   }
 
   // TODO: show notification that file was not opened

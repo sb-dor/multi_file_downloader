@@ -44,11 +44,12 @@ class MultiFileDownloaderController with ChangeNotifier {
     notifyListeners();
   }
 
-  void cancelDownload(String url) {
+  bool cancelDownload(String url) {
     final downloader = _downloads[url];
     if (downloader != null) {
       downloader.cancel();
     }
+    return true;
   }
 
   FileDownloader? getFileDownloaderIfItExist(String url) {
