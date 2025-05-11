@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
@@ -22,7 +21,7 @@ class MultiFileDownloaderHelper {
         await openAppSettings();
         permission = await storagePermission(checkOnceAgain: true);
       }
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+    } else {
       permission = true;
     }
 
@@ -37,9 +36,9 @@ class MultiFileDownloaderHelper {
         await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOAD),
       );
     } else {
-      downloadsDirectory = await getApplicationDocumentsDirectory();
+      downloadsDirectory =
+          (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
     }
-
     return downloadsDirectory;
   }
 }
