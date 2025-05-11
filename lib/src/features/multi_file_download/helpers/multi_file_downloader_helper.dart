@@ -32,8 +32,7 @@ class MultiFileDownloaderHelper {
   Future<Directory> downloadsDirectory() async {
     late Directory downloadsDirectory;
 
-    if (defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.iOS) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       downloadsDirectory = Directory(
         await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOAD),
       );

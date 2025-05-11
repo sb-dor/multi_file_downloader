@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_file_downloader/src/features/initialization/widgets/dependencies_scope.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/controller/multi_file_downloader_controller.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/enums/download_message_type.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/widgets/multi_file_download_config_widget.dart';
@@ -15,12 +16,15 @@ class FileDownloaderWidget extends StatefulWidget {
 class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
   FileDownloader? _fileDownloader;
   late final MultiFileDownloaderController _multiFileDownloaderController;
+  late final String _mainUrl;
 
   bool isVideo(String url) => url.endsWith('.mp4');
 
   @override
   void initState() {
     super.initState();
+    final dependencies = DependenciesScope.of(context, listen: false);
+    _mainUrl = dependencies.applicationConfig.mainUrl;
     _multiFileDownloaderController =
         MultifileDownloadConfigInhWidget.of(context).multiFileDownloaderController;
     _fileDownloader = _multiFileDownloaderController.getFileDownloaderIfItExist(widget.url);
@@ -39,8 +43,8 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
         leading:
             isVideo(widget.url)
                 ? const Icon(Icons.videocam, size: 40)
-                : Image.network(widget.url, width: 60, height: 60, fit: BoxFit.cover),
-        title: Text(widget.url.split('/').last, overflow: TextOverflow.ellipsis),
+                : Image.network("$_mainUrl${widget.url}", width: 60, height: 60, fit: BoxFit.cover),
+        title: Text("$_mainUrl${widget.url}".split('/').last, overflow: TextOverflow.ellipsis),
         trailing:
             _fileDownloader == null
                 ? IconButton(icon: const Icon(Icons.download), onPressed: _download)
@@ -50,6 +54,7 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                     return SizedBox(
                       width: 150,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           if (_fileDownloader?.message == DownloadMessageType.downloading)
                             IconButton(icon: const Icon(Icons.cancel), onPressed: () {}),
@@ -63,10 +68,7 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                             DownloadMessageType.success ||
                             DownloadMessageType.error ||
                             DownloadMessageType.canceled ||
-                            _ => IconButton(
-                              onPressed: _download,
-                              icon: const Icon(Icons.download, color: Colors.grey),
-                            ),
+                            _ => IconButton(onPressed: _download, icon: const Icon(Icons.download)),
                           },
                         ],
                       ),
