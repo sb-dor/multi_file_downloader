@@ -14,7 +14,7 @@ class _MultiFileDownloadWidgetState extends State<MultiFileDownloadWidget> {
   void initState() {
     super.initState();
     _multiFileDownloaderController =
-        MultifileDownloadCondigInhWidget.of(context).multiFileDownloaderController;
+        MultifileDownloadConfigInhWidget.of(context).multiFileDownloaderController;
   }
 
   @override

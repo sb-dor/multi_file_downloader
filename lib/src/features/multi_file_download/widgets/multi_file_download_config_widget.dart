@@ -7,8 +7,8 @@ import 'package:flutter_multi_file_downloader/src/features/multi_file_download/w
 
 part "multi_file_download_widget.dart";
 
-class MultifileDownloadCondigInhWidget extends InheritedWidget {
-  const MultifileDownloadCondigInhWidget({
+class MultifileDownloadConfigInhWidget extends InheritedWidget {
+  const MultifileDownloadConfigInhWidget({
     super.key,
     required this.multiFileDownloadConfigWidgetState,
     required super.child,
@@ -17,16 +17,16 @@ class MultifileDownloadCondigInhWidget extends InheritedWidget {
   static MultiFileDownloadConfigWidgetState of(BuildContext context, {bool listen = false}) =>
       listen
           ? context
-              .dependOnInheritedWidgetOfExactType<MultifileDownloadCondigInhWidget>()!
+              .dependOnInheritedWidgetOfExactType<MultifileDownloadConfigInhWidget>()!
               .multiFileDownloadConfigWidgetState
           : context
-              .getInheritedWidgetOfExactType<MultifileDownloadCondigInhWidget>()!
+              .getInheritedWidgetOfExactType<MultifileDownloadConfigInhWidget>()!
               .multiFileDownloadConfigWidgetState;
 
   final MultiFileDownloadConfigWidgetState multiFileDownloadConfigWidgetState;
 
   @override
-  bool updateShouldNotify(covariant MultifileDownloadCondigInhWidget oldWidget) {
+  bool updateShouldNotify(covariant MultifileDownloadConfigInhWidget oldWidget) {
     return oldWidget.multiFileDownloadConfigWidgetState != multiFileDownloadConfigWidgetState;
   }
 }
@@ -57,7 +57,7 @@ class MultiFileDownloadConfigWidgetState extends State<MultiFileDownloadConfigWi
 
   @override
   Widget build(BuildContext context) {
-    return MultifileDownloadCondigInhWidget(
+    return MultifileDownloadConfigInhWidget(
       multiFileDownloadConfigWidgetState: this,
       child: MultiFileDownloadWidget(),
     );

@@ -22,7 +22,7 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
   void initState() {
     super.initState();
     _multiFileDownloaderController =
-        MultifileDownloadCondigInhWidget.of(context).multiFileDownloaderController;
+        MultifileDownloadConfigInhWidget.of(context).multiFileDownloaderController;
     _fileDownloader = _multiFileDownloaderController.getFileDownloaderIfItExist(widget.url);
   }
 

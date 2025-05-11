@@ -5,6 +5,7 @@ import 'package:flutter_multi_file_downloader/src/common/utils/reusable_function
 import 'package:flutter_multi_file_downloader/src/features/initialization/logic/dependencies_composition.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/logic/desktop_initializer.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/logic/factories/app_logger_factory.dart';
+import 'package:flutter_multi_file_downloader/src/features/initialization/models/application_config.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/widgets/io_material_context.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/widgets/web_material_context.dart';
 import 'package:logger/logger.dart';
@@ -36,7 +37,12 @@ class AppRunner {
         };
 
         try {
-          final dependencyComposition = await DependencyComposition(logger: logger).create();
+          final applicationConfig = ApplicationConfig();
+          final dependencyComposition =
+              await DependencyComposition(
+                logger: logger,
+                applicationConfig: applicationConfig,
+              ).create();
 
           late final Widget materialContext;
 
