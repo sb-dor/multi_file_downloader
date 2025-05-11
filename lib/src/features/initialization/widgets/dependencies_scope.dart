@@ -10,7 +10,7 @@ class DependenciesScope extends InheritedWidget {
       assert(scope != null, "No DependenciesScope found in context");
       return scope!.dependencies;
     } else {
-      final scope = context.getElementForInheritedWidgetOfExactType<DependenciesScope>();
+      final scope = context.getElementForInheritedWidgetOfExactType<DependenciesScope>()?.widget;
       final checkScope = scope is DependenciesScope;
       assert(checkScope, "No DependenciesScope found in context");
       return (scope as DependenciesScope).dependencies;

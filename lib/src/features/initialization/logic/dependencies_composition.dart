@@ -10,7 +10,7 @@ final class DependencyComposition extends AsyncFactory<DependencyContainer> {
 
   @override
   Future<DependencyContainer> create() async {
-    final RestClientBase restClientBase = RestClientHttp(baseUrl: "", logger: logger);
+    final RestClientBase restClientBase = RestClientHttp(baseUrl: "https://picsum.photos", logger: logger);
 
     return DependencyContainer(restClientBase: restClientBase, logger: logger);
   }

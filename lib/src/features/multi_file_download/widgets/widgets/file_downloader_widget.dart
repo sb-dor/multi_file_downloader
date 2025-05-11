@@ -47,20 +47,29 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                 : ListenableBuilder(
                   listenable: _fileDownloader!,
                   builder: (context, child) {
-                    return Row(
-                      children: [
-                        IconButton(icon: const Icon(Icons.cancel), onPressed: () {}),
-                        switch (_fileDownloader!.message) {
-                          DownloadMessageType.downloading => throw UnimplementedError(),
-                          DownloadMessageType.success => throw UnimplementedError(),
-                          DownloadMessageType.error => throw UnimplementedError(),
-                          DownloadMessageType.canceled => throw UnimplementedError(),
-                          _ => IconButton(
-                            onPressed: _download,
-                            icon: const Icon(Icons.download, color: Colors.grey),
-                          ),
-                        },
-                      ],
+                    return SizedBox(
+                      width: 150,
+                      child: Row(
+                        children: [
+                          if (_fileDownloader?.message == DownloadMessageType.downloading)
+                            IconButton(icon: const Icon(Icons.cancel), onPressed: () {}),
+                          switch (_fileDownloader!.message) {
+                            DownloadMessageType.downloading => Center(
+                              child: CircularProgressIndicator(
+                                value: _fileDownloader?.progress.value,
+                                color: Colors.purple,
+                              ),
+                            ),
+                            DownloadMessageType.success ||
+                            DownloadMessageType.error ||
+                            DownloadMessageType.canceled ||
+                            _ => IconButton(
+                              onPressed: _download,
+                              icon: const Icon(Icons.download, color: Colors.grey),
+                            ),
+                          },
+                        ],
+                      ),
                     );
                   },
                 ),
