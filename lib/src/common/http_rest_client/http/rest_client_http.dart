@@ -77,4 +77,58 @@ final class RestClientHttp extends RestClientBase {
       Error.throwWithStackTrace(ClientException(message: e.message, cause: e), stack);
     }
   }
+
+  Future<Stream?> sendAndGetStream({
+    required String path,
+    required RequestType method,
+    Map<String, Object?>? body,
+    Map<String, String>? headers,
+    Map<String, String?>? queryParams,
+    List<http.MultipartFile>? files,
+  }) async {
+    try {
+      final uri = buildUri(path: path, queryParams: queryParams);
+
+      final request = http.MultipartRequest(method.name, uri);
+
+      // Add files to the multipart request
+      // file's name will be added with it's field which you added from http.MultipartFile
+      // take a look inside network/http_rest_client/repository_test.dart
+      if (files != null && files.isNotEmpty) {
+        request.files.addAll(files);
+      }
+
+      // Add other fields in the body to the multipart request
+      if (body != null) {
+        body.forEach((key, value) {
+          request.fields[key] = value.toString();
+        });
+      }
+
+      // Add headers if provided
+      if (headers != null) {
+        request.headers.addAll(headers);
+      }
+
+      final response = await _client.send(request);
+
+      return response.stream;
+    } on RestClientException {
+      rethrow;
+    } on http.ClientException catch (e, stack) {
+      logger.log(Level.debug, "error is: $e");
+      // TODO: write en error exception
+      // write exceptions in the future
+      // when you will get what is going on here
+      final checkException = checkHttpException(e);
+
+      // the Error.throwWithStackTrace method is used to rethrow an exception
+      // while preserving the stack trace, which is important for debugging.
+      if (checkException != null) {
+        Error.throwWithStackTrace(checkException, stack);
+      }
+
+      Error.throwWithStackTrace(ClientException(message: e.message, cause: e), stack);
+    }
+  }
 }
