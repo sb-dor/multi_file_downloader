@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/logic/factories/multi_file_downloader_controller_factory.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/widgets/dependencies_scope.dart';
+import 'package:flutter_multi_file_downloader/src/features/multi_file_download/constants/file_data.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/controller/multi_file_downloader_controller.dart';
+import 'package:flutter_multi_file_downloader/src/features/multi_file_download/widgets/widgets/file_downloader_widget.dart';
 
 part "multi_file_download_widget.dart";
 

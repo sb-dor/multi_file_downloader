@@ -17,9 +17,9 @@ class MultiFileDownloaderController with ChangeNotifier {
 
   Map<String, FileDownloader> get downloads => _downloads;
 
-  Future<void> download(String url, {bool openFile = false}) async {
+  Future<FileDownloader?> download(String url, {bool openFile = false}) async {
     final storagePer = await multiFileDownloaderHelper.storagePermission();
-    if (!storagePer || _downloads.containsKey(url)) return;
+    if (!storagePer || _downloads.containsKey(url)) return null;
 
     final downloader = FileDownloader(
       url: url,
@@ -36,6 +36,7 @@ class MultiFileDownloaderController with ChangeNotifier {
     downloader.download(openFile: openFile);
     _downloads[downloader.url] = downloader;
     notifyListeners();
+    return downloader;
   }
 
   void _removeDownloaderIfItExists(FileDownloader downloader) {
@@ -48,6 +49,11 @@ class MultiFileDownloaderController with ChangeNotifier {
     if (downloader != null) {
       downloader.cancel();
     }
+  }
+
+  FileDownloader? getFileDownloaderIfItExist(String url) {
+    if (downloads[url] == null) return null;
+    return downloads[url];
   }
 
   @override
