@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/logic/desktop_initializer.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/models/dependency_container.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/widgets/dependencies_scope.dart';
-import 'package:flutter_multi_file_downloader/src/features/multi_file_download/widgets/multi_file_download_widget.dart';
+import 'package:flutter_multi_file_downloader/src/features/multi_file_download/widgets/multi_file_download_config_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 class IoMaterialContext extends StatefulWidget {
@@ -60,7 +60,7 @@ class _IoMaterialContextState extends State<IoMaterialContext> with WindowListen
               child: child!,
             ),
         debugShowCheckedModeBanner: !kReleaseMode,
-        home: MultiFileDownloadWidget(),
+        home: MultiFileDownloadConfigWidget(),
       ),
     );
   }

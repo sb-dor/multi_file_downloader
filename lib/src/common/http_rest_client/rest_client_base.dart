@@ -23,6 +23,15 @@ abstract base class RestClientBase implements RestClient {
     List<http.MultipartFile>? files,
   });
 
+  Future<http.StreamedResponse> sendAndGetStream({
+    required String path,
+    required RequestType method,
+    Map<String, Object?>? body,
+    Map<String, String>? headers,
+    Map<String, String?>? queryParams,
+    List<http.MultipartFile>? files,
+  });
+
   @override
   Future<Map<String, Object?>?> get(
     String path, {

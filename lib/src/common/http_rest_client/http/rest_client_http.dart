@@ -78,7 +78,8 @@ final class RestClientHttp extends RestClientBase {
     }
   }
 
-  Future<Stream?> sendAndGetStream({
+  @override
+  Future<http.StreamedResponse> sendAndGetStream({
     required String path,
     required RequestType method,
     Map<String, Object?>? body,
@@ -112,7 +113,7 @@ final class RestClientHttp extends RestClientBase {
 
       final response = await _client.send(request);
 
-      return response.stream;
+      return response;
     } on RestClientException {
       rethrow;
     } on http.ClientException catch (e, stack) {
