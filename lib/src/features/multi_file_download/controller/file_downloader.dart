@@ -38,7 +38,7 @@ class FileDownloader with ChangeNotifier {
 
       _subscription = response.stream.listen(
         (chunk) {
-          print("downloading");
+          // print("downloading");
           downloadedBytes = (downloadedBytes ?? 0) + chunk.length;
           sink.add(chunk);
           if (totalBytes != null && totalBytes! > 0) {
