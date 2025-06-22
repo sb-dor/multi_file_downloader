@@ -43,7 +43,6 @@ class MultiFileDownloaderHelper {
       downloadsDirectory =
           (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
     }
-    print("path: ${downloadsDirectory.path}");
     return downloadsDirectory;
   }
 }

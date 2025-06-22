@@ -1,4 +1,5 @@
 enum DownloadMessageType {
+  idle._("idle"),
   downloading._("downloading"),
   success._("success"),
   error._("error"),

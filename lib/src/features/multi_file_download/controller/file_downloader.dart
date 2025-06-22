@@ -1,18 +1,26 @@
-part of "multi_file_downloader_controller.dart";
+import 'dart:async' show StreamSubscription, Completer;
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_multi_file_downloader/src/common/http_rest_client/rest_client_base.dart';
+import 'package:flutter_multi_file_downloader/src/features/multi_file_download/enums/download_message_type.dart';
+import 'package:flutter_multi_file_downloader/src/features/multi_file_download/models/download_state.dart';
+import 'package:open_file/open_file.dart';
 
 class FileDownloader with ChangeNotifier {
-  FileDownloader({required this.url, required this.directory, required this.restClientBase});
+  FileDownloader({
+    required this.url,
+    required this.directory,
+    required this.restClientBase,
+    DownloadState? downloadState,
+  }) : downloadProgress = ValueNotifier(
+         downloadState ?? DownloadState(progress: 0.0, message: DownloadMessageType.idle),
+       );
 
   final String url;
   final Directory directory;
   final RestClientBase restClientBase;
 
-  double? downloadedBytes;
-  double? totalBytes;
-  DownloadMessageType? message;
-  Object? lastError;
-
-  final ValueNotifier<double> progress = ValueNotifier(0.0);
+  final ValueNotifier<DownloadState> downloadProgress;
 
   StreamSubscription<List<int>>? _subscription;
 
@@ -21,65 +29,59 @@ class FileDownloader with ChangeNotifier {
       final file = await getFile();
 
       if (await file.exists()) {
-        message = DownloadMessageType.success;
-        notifyListeners();
+        _updateState(DownloadMessageType.success, 1.0);
         if (openFile) await _openFile(file.path);
         return;
       }
 
-      message = DownloadMessageType.downloading;
-      downloadedBytes = 0.0;
-      notifyListeners();
+      _updateState(DownloadMessageType.downloading, 0.0);
 
       final response = await restClientBase.sendAndGetStream(path: url, method: RequestType.get);
-      totalBytes = response.contentLength?.toDouble() ?? 0;
+      final total = response.contentLength?.toDouble() ?? 0;
+      double downloaded = 0.0;
       final sink = file.openWrite();
       final completer = Completer<void>();
 
       _subscription = response.stream.listen(
         (chunk) {
-          // print("downloading");
-          downloadedBytes = (downloadedBytes ?? 0) + chunk.length;
+          downloaded = downloaded + chunk.length;
           sink.add(chunk);
-          if (totalBytes != null && totalBytes! > 0) {
-            progress.value = downloadedBytes! / totalBytes!;
-          }
-          notifyListeners();
+          final progress = (total > 0) ? downloaded / total : 0.0;
+          _updateState(DownloadMessageType.downloading, progress);
         },
         onDone: () async {
           await sink.close();
-          message = DownloadMessageType.success;
-          notifyListeners();
+          _updateState(DownloadMessageType.success, 1.0);
           completer.complete();
         },
         onError: (error, stackTrace) async {
           await sink.close();
-          lastError = error;
-          message = DownloadMessageType.error;
-          notifyListeners();
+          _updateState(DownloadMessageType.error, 0.0, error: error);
           completer.completeError(error, stackTrace);
         },
         cancelOnError: true,
       );
 
       await completer.future;
-      if (openFile && message == DownloadMessageType.success) {
+      if (openFile && downloadProgress.value.isComplete) {
         await _openFile(file.path);
       }
     } catch (error, stackTrace) {
-      lastError = error;
-      message = DownloadMessageType.error;
-      notifyListeners();
+      _updateState(DownloadMessageType.error, 0.0, error: error);
       Error.throwWithStackTrace(error, stackTrace);
     }
   }
 
+  void _updateState(DownloadMessageType type, double progress, {Object? error}) {
+    downloadProgress.value = DownloadState(progress: progress, message: type, error: error);
+    notifyListeners();
+  }
+
   Future<void> cancel() async {
     await _subscription?.cancel();
-    message = DownloadMessageType.canceled;
     final file = await getFile();
     if (file.existsSync()) file.deleteSync();
-    notifyListeners();
+    _updateState(DownloadMessageType.canceled, 0.0);
   }
 
   Future<File> getFile() async {
@@ -106,7 +108,7 @@ class FileDownloader with ChangeNotifier {
   @override
   void dispose() {
     _subscription?.cancel();
-    progress.dispose();
+    downloadProgress.dispose();
     super.dispose();
   }
 }

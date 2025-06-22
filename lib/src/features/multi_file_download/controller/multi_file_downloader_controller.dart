@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_multi_file_downloader/src/common/http_rest_client/rest_client_base.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/enums/download_message_type.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/helpers/multi_file_downloader_helper.dart';
 import 'package:open_file/open_file.dart';
 
-part "file_downloader.dart";
+import 'file_downloader.dart';
 
 class MultiFileDownloaderController with ChangeNotifier {
   MultiFileDownloaderController(this.restClientBase, this.multiFileDownloaderHelper);
@@ -29,7 +29,7 @@ class MultiFileDownloaderController with ChangeNotifier {
 
     // TODO: show notification if something goes wrong
     downloader.addListener(() {
-      if (downloader.message == DownloadMessageType.downloading) return;
+      if (downloader.downloadProgress.value.message == DownloadMessageType.downloading) return;
       _removeDownloaderIfItExists(downloader);
     });
 

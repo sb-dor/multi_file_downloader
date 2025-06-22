@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_file_downloader/src/features/initialization/widgets/dependencies_scope.dart';
+import 'package:flutter_multi_file_downloader/src/features/multi_file_download/controller/file_downloader.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/controller/multi_file_downloader_controller.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/enums/download_message_type.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/widgets/multi_file_download_config_widget.dart';
@@ -56,7 +57,8 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          if (_fileDownloader?.message == DownloadMessageType.downloading)
+                          if (_fileDownloader?.downloadProgress.value.message ==
+                              DownloadMessageType.downloading)
                             IconButton(
                               icon: const Icon(Icons.cancel),
                               onPressed: () {
@@ -70,10 +72,10 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                                 }
                               },
                             ),
-                          switch (_fileDownloader!.message) {
+                          switch (_fileDownloader?.downloadProgress.value.message) {
                             DownloadMessageType.downloading => Center(
                               child: CircularProgressIndicator(
-                                value: _fileDownloader?.progress.value,
+                                value: _fileDownloader?.downloadProgress.value.progress,
                                 color: Colors.purple,
                               ),
                             ),
