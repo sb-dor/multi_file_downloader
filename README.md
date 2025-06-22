@@ -1,16 +1,1 @@
-# flutter_multi_file_downloader
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This Flutter project implements the logic for downloading multiple files concurrently. It handles permission requests, progress tracking, file management, and download cancellation. The core logic uses a MultiFileDownloaderController that manages multiple FileDownloader instances, each responsible for downloading a single file with real-time progress updates and error handling.
