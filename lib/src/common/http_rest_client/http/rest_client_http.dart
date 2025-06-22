@@ -3,13 +3,15 @@ import 'package:flutter_multi_file_downloader/src/common/http_rest_client/rest_c
 import "package:http/http.dart" as http;
 import "package:logger/logger.dart";
 
-import "check_exception_io.dart" if (dart.library.js_interop) "check_exception_web.dart";
+import "check_exception_io.dart"
+    if (dart.library.js_interop) "check_exception_web.dart";
 
 final class RestClientHttp extends RestClientBase {
   RestClientHttp({
     required super.baseUrl,
     required this.logger,
-    http.Client? client, // you don't have to send client, uses for tests most of all
+    http.Client?
+    client, // you don't have to send client, uses for tests most of all
   }) : _client = client ?? http.Client();
 
   final http.Client _client;
@@ -74,7 +76,10 @@ final class RestClientHttp extends RestClientBase {
         Error.throwWithStackTrace(checkException, stack);
       }
 
-      Error.throwWithStackTrace(ClientException(message: e.message, cause: e), stack);
+      Error.throwWithStackTrace(
+        ClientException(message: e.message, cause: e),
+        stack,
+      );
     }
   }
 
@@ -89,6 +94,8 @@ final class RestClientHttp extends RestClientBase {
   }) async {
     try {
       final uri = buildUri(path: path, queryParams: queryParams);
+
+      print("uri: $uri");
 
       final request = http.MultipartRequest(method.name, uri);
 
@@ -129,7 +136,10 @@ final class RestClientHttp extends RestClientBase {
         Error.throwWithStackTrace(checkException, stack);
       }
 
-      Error.throwWithStackTrace(ClientException(message: e.message, cause: e), stack);
+      Error.throwWithStackTrace(
+        ClientException(message: e.message, cause: e),
+        stack,
+      );
     }
   }
 }

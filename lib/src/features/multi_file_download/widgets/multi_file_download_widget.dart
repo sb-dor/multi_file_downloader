@@ -4,30 +4,35 @@ class MultiFileDownloadWidget extends StatefulWidget {
   const MultiFileDownloadWidget({super.key});
 
   @override
-  State<MultiFileDownloadWidget> createState() => _MultiFileDownloadWidgetState();
+  State<MultiFileDownloadWidget> createState() =>
+      _MultiFileDownloadWidgetState();
 }
 
 class _MultiFileDownloadWidgetState extends State<MultiFileDownloadWidget> {
   late final MultiFileDownloaderController _multiFileDownloaderController;
 
-  late final List<String> mediaUrls;
+  final List<String> _mediaUrls = [];
+
+  final Random _random = Random();
 
   @override
   void initState() {
     super.initState();
     _multiFileDownloaderController =
-        MultifileDownloadConfigInhWidget.of(context).multiFileDownloaderController;
+        MultifileDownloadConfigInhWidget.of(
+          context,
+        ).multiFileDownloaderController;
 
-    mediaUrls = [
-      '/id/1/1920/1010.jpg',
-      '/id/2/1920/1010.jpg',
-      '/id/3/1920/1010.jpg',
-      '/id/4/1920/1010.jpg',
-      '/id/5/1920/1010.jpg',
-      '/id/5/1920/1010.jpg',
-      '/id/6/1920/1010.jpg',
-      '/id/7/1920/1010.jpg',
-    ];
+    for (int i = 0; i < 10; i++) {
+      _mediaUrls.add(_randomPictureUrl());
+    }
+  }
+
+  String _randomPictureUrl({int width = 1920, int height = 1080}) {
+    final int randomInt = _random.nextInt(1000);
+    // you can remove last parameter
+    // it's just for uniqueness
+    return '/seed/$randomInt/$width/$height';
   }
 
   @override
@@ -40,9 +45,9 @@ class _MultiFileDownloadWidgetState extends State<MultiFileDownloadWidget> {
           return CustomScrollView(
             slivers: [
               SliverList.builder(
-                itemCount: mediaUrls.length,
+                itemCount: _mediaUrls.length,
                 itemBuilder: (context, index) {
-                  final url = mediaUrls[index];
+                  final url = _mediaUrls[index];
                   return FileDownloaderWidget(url: url);
                 },
               ),

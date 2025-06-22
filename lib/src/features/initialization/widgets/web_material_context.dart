@@ -24,7 +24,9 @@ class _WebMaterialContextState extends State<WebMaterialContext> {
         builder:
             (context, child) => MediaQuery(
               data: mediaQueryData.copyWith(
-                textScaler: TextScaler.linear(mediaQueryData.textScaler.scale(1).clamp(0.5, 2)),
+                textScaler: TextScaler.linear(
+                  mediaQueryData.textScaler.scale(1).clamp(0.5, 2),
+                ),
               ),
               child: child!,
             ),

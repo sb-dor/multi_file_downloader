@@ -2,6 +2,7 @@ import 'dart:async' show StreamSubscription, Completer;
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_multi_file_downloader/src/common/http_rest_client/rest_client_base.dart';
+import 'package:flutter_multi_file_downloader/src/common/utils/reusable_functions.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/enums/download_message_type.dart';
 import 'package:flutter_multi_file_downloader/src/features/multi_file_download/models/download_state.dart';
 import 'package:open_file/open_file.dart';
@@ -13,7 +14,8 @@ class FileDownloader with ChangeNotifier {
     required this.restClientBase,
     DownloadState? downloadState,
   }) : downloadProgress = ValueNotifier(
-         downloadState ?? DownloadState(progress: 0.0, message: DownloadMessageType.idle),
+         downloadState ??
+             DownloadState(progress: 0.0, message: DownloadMessageType.idle),
        );
 
   final String url;
@@ -36,7 +38,11 @@ class FileDownloader with ChangeNotifier {
 
       _updateState(DownloadMessageType.downloading, 0.0);
 
-      final response = await restClientBase.sendAndGetStream(path: url, method: RequestType.get);
+      final response = await restClientBase.sendAndGetStream(
+        path: url,
+        method: RequestType.get,
+      );
+      print("Status: ${response.statusCode} - ${response.contentLength} ");
       final total = response.contentLength?.toDouble() ?? 0;
       double downloaded = 0.0;
       final sink = file.openWrite();
@@ -44,7 +50,7 @@ class FileDownloader with ChangeNotifier {
 
       _subscription = response.stream.listen(
         (chunk) {
-          downloaded = downloaded + chunk.length;
+          downloaded += chunk.length;
           sink.add(chunk);
           final progress = (total > 0) ? downloaded / total : 0.0;
           _updateState(DownloadMessageType.downloading, progress);
@@ -56,6 +62,7 @@ class FileDownloader with ChangeNotifier {
         },
         onError: (error, stackTrace) async {
           await sink.close();
+          await cancel();
           _updateState(DownloadMessageType.error, 0.0, error: error);
           completer.completeError(error, stackTrace);
         },
@@ -72,8 +79,16 @@ class FileDownloader with ChangeNotifier {
     }
   }
 
-  void _updateState(DownloadMessageType type, double progress, {Object? error}) {
-    downloadProgress.value = DownloadState(progress: progress, message: type, error: error);
+  void _updateState(
+    DownloadMessageType type,
+    double progress, {
+    Object? error,
+  }) {
+    downloadProgress.value = DownloadState(
+      progress: progress,
+      message: type,
+      error: error,
+    );
     notifyListeners();
   }
 
@@ -86,7 +101,9 @@ class FileDownloader with ChangeNotifier {
 
   Future<File> getFile() async {
     final uri = Uri.parse(url);
-    final filePath = '${directory.path}/${uri.pathSegments.last}';
+    final filePath =
+        '${directory.path}/${ReusableFunctions.instance.removeSpaceFromStringForDownloadingFile(uri.path)}.jpg';
+    print("file path: $filePath");
     return File(filePath);
   }
 

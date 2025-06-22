@@ -5,7 +5,10 @@ import 'package:flutter_multi_file_downloader/src/features/initialization/models
 import 'package:logger/logger.dart';
 
 final class DependencyComposition extends AsyncFactory<DependencyContainer> {
-  DependencyComposition({required this.logger, required this.applicationConfig});
+  DependencyComposition({
+    required this.logger,
+    required this.applicationConfig,
+  });
 
   final Logger logger;
   final ApplicationConfig applicationConfig;

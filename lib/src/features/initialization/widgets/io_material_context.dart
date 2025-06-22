@@ -15,7 +15,8 @@ class IoMaterialContext extends StatefulWidget {
   State<IoMaterialContext> createState() => _IoMaterialContextState();
 }
 
-class _IoMaterialContextState extends State<IoMaterialContext> with WindowListener {
+class _IoMaterialContextState extends State<IoMaterialContext>
+    with WindowListener {
   final fadeTransitionPlatforms = {
     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
@@ -55,7 +56,9 @@ class _IoMaterialContextState extends State<IoMaterialContext> with WindowListen
         builder:
             (context, child) => MediaQuery(
               data: mediaQueryData.copyWith(
-                textScaler: TextScaler.linear(mediaQueryData.textScaler.scale(1).clamp(0.5, 2)),
+                textScaler: TextScaler.linear(
+                  mediaQueryData.textScaler.scale(1).clamp(0.5, 2),
+                ),
               ),
               child: child!,
             ),
