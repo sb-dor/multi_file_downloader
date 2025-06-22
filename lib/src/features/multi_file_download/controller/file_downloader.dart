@@ -14,8 +14,7 @@ class FileDownloader with ChangeNotifier {
     required this.restClientBase,
     DownloadState? downloadState,
   }) : downloadProgress = ValueNotifier(
-         downloadState ??
-             DownloadState(progress: 0.0, message: DownloadMessageType.idle),
+         downloadState ?? DownloadState(progress: 0.0, message: DownloadMessageType.idle),
        );
 
   final String url;
@@ -38,11 +37,7 @@ class FileDownloader with ChangeNotifier {
 
       _updateState(DownloadMessageType.downloading, 0.0);
 
-      final response = await restClientBase.sendAndGetStream(
-        path: url,
-        method: RequestType.get,
-      );
-      print("Status: ${response.statusCode} - ${response.contentLength} ");
+      final response = await restClientBase.sendAndGetStream(path: url, method: RequestType.get);
       final total = response.contentLength?.toDouble() ?? 0;
       double downloaded = 0.0;
       final sink = file.openWrite();
@@ -79,16 +74,8 @@ class FileDownloader with ChangeNotifier {
     }
   }
 
-  void _updateState(
-    DownloadMessageType type,
-    double progress, {
-    Object? error,
-  }) {
-    downloadProgress.value = DownloadState(
-      progress: progress,
-      message: type,
-      error: error,
-    );
+  void _updateState(DownloadMessageType type, double progress, {Object? error}) {
+    downloadProgress.value = DownloadState(progress: progress, message: type, error: error);
     notifyListeners();
   }
 
@@ -103,7 +90,6 @@ class FileDownloader with ChangeNotifier {
     final uri = Uri.parse(url);
     final filePath =
         '${directory.path}/${ReusableFunctions.instance.removeSpaceFromStringForDownloadingFile(uri.path)}.jpg';
-    print("file path: $filePath");
     return File(filePath);
   }
 

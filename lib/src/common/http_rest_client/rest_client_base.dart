@@ -37,12 +37,7 @@ abstract base class RestClientBase implements RestClient {
     String path, {
     Map<String, String>? headers,
     Map<String, String>? queryParams,
-  }) => send(
-    path: path,
-    method: RequestType.get,
-    headers: headers,
-    queryParams: queryParams,
-  );
+  }) => send(path: path, method: RequestType.get, headers: headers, queryParams: queryParams);
 
   @override
   Future<Map<String, Object?>?> post(
@@ -81,12 +76,7 @@ abstract base class RestClientBase implements RestClient {
     String path, {
     Map<String, String>? headers,
     Map<String, String>? queryParams,
-  }) => send(
-    path: path,
-    method: RequestType.delete,
-    headers: headers,
-    queryParams: queryParams,
-  );
+  }) => send(path: path, method: RequestType.delete, headers: headers, queryParams: queryParams);
 
   @override
   Future<Map<String, Object?>?> patch(

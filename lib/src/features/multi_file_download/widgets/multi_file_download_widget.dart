@@ -4,8 +4,7 @@ class MultiFileDownloadWidget extends StatefulWidget {
   const MultiFileDownloadWidget({super.key});
 
   @override
-  State<MultiFileDownloadWidget> createState() =>
-      _MultiFileDownloadWidgetState();
+  State<MultiFileDownloadWidget> createState() => _MultiFileDownloadWidgetState();
 }
 
 class _MultiFileDownloadWidgetState extends State<MultiFileDownloadWidget> {
@@ -19,9 +18,7 @@ class _MultiFileDownloadWidgetState extends State<MultiFileDownloadWidget> {
   void initState() {
     super.initState();
     _multiFileDownloaderController =
-        MultifileDownloadConfigInhWidget.of(
-          context,
-        ).multiFileDownloaderController;
+        MultiFileDownloadConfigInhWidget.of(context).multiFileDownloaderController;
 
     for (int i = 0; i < 10; i++) {
       _mediaUrls.add(_randomPictureUrl());

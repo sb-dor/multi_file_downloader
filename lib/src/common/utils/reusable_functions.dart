@@ -20,9 +20,7 @@ final class ReusableFunctions {
   };
 
   void showSnackBar({required BuildContext context, required String message}) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   String removeSpaceFromStringForDownloadingFile(String value) {

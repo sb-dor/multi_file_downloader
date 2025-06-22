@@ -27,12 +27,8 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
     final dependencies = DependenciesScope.of(context, listen: false);
     _mainUrl = dependencies.applicationConfig.mainUrl;
     _multiFileDownloaderController =
-        MultifileDownloadConfigInhWidget.of(
-          context,
-        ).multiFileDownloaderController;
-    _fileDownloader = _multiFileDownloaderController.getFileDownloaderIfItExist(
-      widget.url,
-    );
+        MultiFileDownloadConfigInhWidget.of(context).multiFileDownloaderController;
+    _fileDownloader = _multiFileDownloaderController.getFileDownloaderIfItExist(widget.url);
   }
 
   void _download() async {
@@ -48,22 +44,11 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
         leading:
             isVideo(widget.url)
                 ? const Icon(Icons.videocam, size: 40)
-                : Image.network(
-                  "$_mainUrl${widget.url}",
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
-                ),
-        title: Text(
-          "$_mainUrl${widget.url}".split('/').last,
-          overflow: TextOverflow.ellipsis,
-        ),
+                : Image.network("$_mainUrl${widget.url}", width: 60, height: 60, fit: BoxFit.cover),
+        title: Text("$_mainUrl${widget.url}".split('/').last, overflow: TextOverflow.ellipsis),
         trailing:
             _fileDownloader == null
-                ? IconButton(
-                  icon: const Icon(Icons.download),
-                  onPressed: _download,
-                )
+                ? IconButton(icon: const Icon(Icons.download), onPressed: _download)
                 : ListenableBuilder(
                   listenable: _fileDownloader!,
                   builder: (context, child) {
@@ -77,9 +62,9 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                             IconButton(
                               icon: const Icon(Icons.cancel),
                               onPressed: () {
-                                final bool cancel =
-                                    _multiFileDownloaderController
-                                        .cancelDownload(widget.url);
+                                final bool cancel = _multiFileDownloaderController.cancelDownload(
+                                  widget.url,
+                                );
                                 if (cancel) {
                                   setState(() {
                                     _fileDownloader = null;
@@ -87,27 +72,17 @@ class _FileDownloaderWidgetState extends State<FileDownloaderWidget> {
                                 }
                               },
                             ),
-                          switch (_fileDownloader
-                              ?.downloadProgress
-                              .value
-                              .message) {
+                          switch (_fileDownloader?.downloadProgress.value.message) {
                             DownloadMessageType.downloading => Center(
                               child: CircularProgressIndicator(
-                                value:
-                                    _fileDownloader
-                                        ?.downloadProgress
-                                        .value
-                                        .progress,
+                                value: _fileDownloader?.downloadProgress.value.progress,
                                 color: Colors.purple,
                               ),
                             ),
                             DownloadMessageType.success ||
                             DownloadMessageType.error ||
                             DownloadMessageType.canceled ||
-                            _ => IconButton(
-                              onPressed: _download,
-                              icon: const Icon(Icons.download),
-                            ),
+                            _ => IconButton(onPressed: _download, icon: const Icon(Icons.download)),
                           },
                         ],
                       ),

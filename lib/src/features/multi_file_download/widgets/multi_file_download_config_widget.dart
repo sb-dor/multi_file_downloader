@@ -8,37 +8,27 @@ import 'package:flutter_multi_file_downloader/src/features/multi_file_download/w
 
 part "multi_file_download_widget.dart";
 
-class MultifileDownloadConfigInhWidget extends InheritedWidget {
-  const MultifileDownloadConfigInhWidget({
+class MultiFileDownloadConfigInhWidget extends InheritedWidget {
+  const MultiFileDownloadConfigInhWidget({
     super.key,
     required this.multiFileDownloadConfigWidgetState,
     required super.child,
   });
 
-  static MultiFileDownloadConfigWidgetState of(
-    BuildContext context, {
-    bool listen = false,
-  }) =>
+  static MultiFileDownloadConfigWidgetState of(BuildContext context, {bool listen = false}) =>
       listen
           ? context
-              .dependOnInheritedWidgetOfExactType<
-                MultifileDownloadConfigInhWidget
-              >()!
+              .dependOnInheritedWidgetOfExactType<MultiFileDownloadConfigInhWidget>()!
               .multiFileDownloadConfigWidgetState
           : context
-              .getInheritedWidgetOfExactType<
-                MultifileDownloadConfigInhWidget
-              >()!
+              .getInheritedWidgetOfExactType<MultiFileDownloadConfigInhWidget>()!
               .multiFileDownloadConfigWidgetState;
 
   final MultiFileDownloadConfigWidgetState multiFileDownloadConfigWidgetState;
 
   @override
-  bool updateShouldNotify(
-    covariant MultifileDownloadConfigInhWidget oldWidget,
-  ) {
-    return oldWidget.multiFileDownloadConfigWidgetState !=
-        multiFileDownloadConfigWidgetState;
+  bool updateShouldNotify(covariant MultiFileDownloadConfigInhWidget oldWidget) {
+    return oldWidget.multiFileDownloadConfigWidgetState != multiFileDownloadConfigWidgetState;
   }
 }
 
@@ -46,21 +36,17 @@ class MultiFileDownloadConfigWidget extends StatefulWidget {
   const MultiFileDownloadConfigWidget({super.key});
 
   @override
-  State<MultiFileDownloadConfigWidget> createState() =>
-      MultiFileDownloadConfigWidgetState();
+  State<MultiFileDownloadConfigWidget> createState() => MultiFileDownloadConfigWidgetState();
 }
 
-class MultiFileDownloadConfigWidgetState
-    extends State<MultiFileDownloadConfigWidget> {
+class MultiFileDownloadConfigWidgetState extends State<MultiFileDownloadConfigWidget> {
   late final MultiFileDownloaderController multiFileDownloaderController;
 
   @override
   void initState() {
     final dependencies = DependenciesScope.of(context, listen: false);
     multiFileDownloaderController =
-        MultiFileDownloaderControllerFactory(
-          dependencies.restClientBase,
-        ).create();
+        MultiFileDownloaderControllerFactory(dependencies.restClientBase).create();
     super.initState();
   }
 
@@ -72,7 +58,7 @@ class MultiFileDownloadConfigWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return MultifileDownloadConfigInhWidget(
+    return MultiFileDownloadConfigInhWidget(
       multiFileDownloadConfigWidgetState: this,
       child: MultiFileDownloadWidget(),
     );

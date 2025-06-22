@@ -5,21 +5,13 @@ class DownloadState {
   final DownloadMessageType message;
   final Object? error;
 
-  const DownloadState({
-    required this.progress,
-    required this.message,
-    this.error,
-  });
+  const DownloadState({required this.progress, required this.message, this.error});
 
   bool get isComplete => message == DownloadMessageType.success;
 
   bool get isError => message == DownloadMessageType.error;
 
-  DownloadState copyWith({
-    double? progress,
-    DownloadMessageType? message,
-    Object? error,
-  }) {
+  DownloadState copyWith({double? progress, DownloadMessageType? message, Object? error}) {
     return DownloadState(
       progress: progress ?? this.progress,
       message: message ?? this.message,

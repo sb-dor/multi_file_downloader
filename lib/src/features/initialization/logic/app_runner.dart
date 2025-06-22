@@ -13,9 +13,7 @@ import 'package:logger/logger.dart';
 class AppRunner {
   Future<void> initialize() async {
     final logger =
-        AppLoggerFactory(
-          logFilter: kReleaseMode ? NoOpLogFilter() : DevelopmentFilter(),
-        ).create();
+        AppLoggerFactory(logFilter: kReleaseMode ? NoOpLogFilter() : DevelopmentFilter()).create();
     //
     await runZonedGuarded(
       () async {
@@ -49,13 +47,9 @@ class AppRunner {
           late final Widget materialContext;
 
           if (kIsWeb || kIsWasm) {
-            materialContext = WebMaterialContext(
-              dependencyContainer: dependencyComposition,
-            );
+            materialContext = WebMaterialContext(dependencyContainer: dependencyComposition);
           } else {
-            materialContext = IoMaterialContext(
-              dependencyContainer: dependencyComposition,
-            );
+            materialContext = IoMaterialContext(dependencyContainer: dependencyComposition);
           }
 
           runApp(materialContext);

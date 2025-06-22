@@ -35,16 +35,13 @@ class MultiFileDownloaderHelper {
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       downloadsDirectory = Directory(
-        await ExternalPath.getExternalStoragePublicDirectory(
-          ExternalPath.DIRECTORY_DOWNLOAD,
-        ),
+        await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOAD),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       downloadsDirectory = await getApplicationDocumentsDirectory();
     } else {
       downloadsDirectory =
-          (await getDownloadsDirectory()) ??
-          (await getApplicationDocumentsDirectory());
+          (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
     }
     return downloadsDirectory;
   }

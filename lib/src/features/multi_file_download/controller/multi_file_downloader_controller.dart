@@ -9,10 +9,7 @@ import 'package:open_file/open_file.dart';
 import 'file_downloader.dart';
 
 class MultiFileDownloaderController with ChangeNotifier {
-  MultiFileDownloaderController(
-    this.restClientBase,
-    this.multiFileDownloaderHelper,
-  );
+  MultiFileDownloaderController(this.restClientBase, this.multiFileDownloaderHelper);
 
   final RestClientBase restClientBase;
   final MultiFileDownloaderHelper multiFileDownloaderHelper;
@@ -32,9 +29,7 @@ class MultiFileDownloaderController with ChangeNotifier {
 
     // TODO: show notification if something goes wrong
     downloader.addListener(() {
-      if (downloader.downloadProgress.value.message ==
-          DownloadMessageType.downloading)
-        return;
+      if (downloader.downloadProgress.value.message == DownloadMessageType.downloading) return;
       _removeDownloaderIfItExists(downloader);
     });
 
