@@ -31,18 +31,15 @@ class MultiFileDownloaderHelper {
   }
 
   Future<Directory> downloadsDirectory() async {
-    late Directory downloadsDirectory;
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      downloadsDirectory = Directory(
-        await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOAD),
-      );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      downloadsDirectory = await getApplicationDocumentsDirectory();
-    } else {
-      downloadsDirectory =
-          (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return Directory(
+          await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOAD),
+        );
+      case TargetPlatform.iOS:
+        return getApplicationDocumentsDirectory();
+      default:
+        return (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
     }
-    return downloadsDirectory;
   }
 }
