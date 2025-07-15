@@ -35,7 +35,20 @@ class _MultiFileDownloadWidgetState extends State<MultiFileDownloadWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Multi file downloader")),
+      appBar: AppBar(
+        title: Text("Multi file downloader"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MultiFileDownloadAllFilesWidget()),
+              );
+            },
+            icon: Icon(Icons.download),
+          ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: _multiFileDownloaderController,
         builder: (context, child) {
