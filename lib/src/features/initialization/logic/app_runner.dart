@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_file_downloader/src/common/utils/reusable_functions.dart';
@@ -12,6 +13,8 @@ import 'package:logger/logger.dart';
 
 class AppRunner {
   Future<void> initialize() async {
+    HttpOverrides.global = MyHttpOverrides();
+
     final logger =
         AppLoggerFactory(logFilter: kReleaseMode ? NoOpLogFilter() : DevelopmentFilter()).create();
     //
@@ -63,5 +66,13 @@ class AppRunner {
         logger.log(Level.debug, "Error: $error | stacktrace: $stackTrace");
       },
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }

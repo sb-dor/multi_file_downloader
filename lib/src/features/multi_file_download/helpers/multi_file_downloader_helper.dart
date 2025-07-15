@@ -6,6 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MultiFileDownloaderHelper {
+  final String appName = "FlutterMFD";
+
   Future<bool> storagePermission({bool checkOnceAgain = false}) async {
     final deviceInfo = await DeviceInfoPlugin().deviceInfo;
     bool permission = false;
@@ -31,15 +33,28 @@ class MultiFileDownloaderHelper {
   }
 
   Future<Directory> downloadsDirectory() async {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return Directory(
-          await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOAD),
-        );
-      case TargetPlatform.iOS:
-        return getApplicationDocumentsDirectory();
-      default:
-        return (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
+    Directory? downloadsDir = await getDownloadsDirectory();
+    final exists = (await downloadsDir?.exists()) ?? false;
+    if (!exists) {
+      downloadsDir = await Directory(downloadsDir?.path ?? '').create();
     }
+    print("downloads dir: ${downloadsDir?.path}");
+    return downloadsDir ?? getApplicationDocumentsDirectory();
+    // switch (defaultTargetPlatform) {
+    //   case TargetPlatform.android:
+    //     await Permission.storage.request();
+    //
+    //     Directory directory = Directory("/storage/emulated/0/Download/");
+    //     if (!await directory.exists()) {
+    //       directory = await directory.create(recursive: true);
+    //     }
+    //     print("downloads dir: ${directory.path}");
+    //
+    //     return directory;
+    //   case TargetPlatform.iOS:
+    //     return getApplicationDocumentsDirectory();
+    //   default:
+    //     return (await getDownloadsDirectory()) ?? (await getApplicationDocumentsDirectory());
+    // }
   }
 }
